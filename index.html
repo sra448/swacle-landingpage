@@ -112,6 +112,10 @@
         margin-bottom: 20px;
         padding: 0 18px;
       }
+
+      .email-message {
+        display: none;
+      }
     </style>
   </head>
 
@@ -171,10 +175,11 @@
     </div>
 
     <div>
-      <form>
+      <form id="emailForm">
         <input type="email" id="email" name="email" />
         <input type="submit" />
       </form>
+      <div id="emailMessage" class="email-message">Vielen Dank!</div>
     </div>
 
     <div class="faq">
@@ -217,5 +222,31 @@
         </div>
       </div>
     </div>
+
+    <script type="text/javascript">
+      window.onload = function() {
+        document.getElementById("emailForm").onsubmit = (e) => {
+          e.preventDefault();
+          fetch("https://eminent-gull-60.hasura.app/v1/graphql", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-hasura-admin-secret": "CV7z2I0STXYLpEcwdI9kSy9idCKq1UySIM4VE2miEagfA3PC1fZ2Mk6mOCgp57Ow"
+            },
+            body:
+              `mutation MyMutation {
+                insert_subscribers(objects: {email: "${document.getElementById("email").value}", ip: "123.123.123.123"}) {
+                  returning {
+                    id
+                  }
+                }
+              }`
+          });
+
+          document.getElementById("emailForm").style.display = "none";
+          document.getElementById("emailMessage").style.display = "block";
+        }
+      }
+    </script>
   </body>
 </html>
