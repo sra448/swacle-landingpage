@@ -233,14 +233,15 @@
               "content-type": "application/json",
               "x-hasura-admin-secret": "CV7z2I0STXYLpEcwdI9kSy9idCKq1UySIM4VE2miEagfA3PC1fZ2Mk6mOCgp57Ow"
             },
-            body:
-              `mutation MyMutation {
+            body: JSON.stringify({
+              query: `mutation MyMutation {
                 insert_subscribers(objects: {email: "${document.getElementById("email").value}", ip: "123.123.123.123"}) {
                   returning {
                     id
                   }
                 }
               }`
+            })
           });
 
           document.getElementById("emailForm").style.display = "none";
